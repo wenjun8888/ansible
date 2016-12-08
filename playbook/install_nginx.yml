@@ -1,0 +1,27 @@
+- hosts: cluster
+  remote_user: root
+  tasks:
+  - name: mkdir 
+    file: path=/root/Downloads state=directory
+  - name: copy nginx to remote
+    copy: src=/etc/ansible/files/nginx-1.10.1.tar.gz dest=/root/Downloads
+  - name: copy pcre to remote
+    copy: src=/etc/ansible/files/pcre-8.35.tar.gz dest=/root/Downloads
+  - name: copy zlib to remote
+    copy: src=/etc/ansible/files/zlib-1.2.8.tar.gz dest=/root/Downloads
+  - name: run install scripts
+    script: /etc/ansible/scripts/nginx.sh
+  - name: create configure directories
+    file: path=/usr/local/nginx/conf/conf.d state=directory
+  - name: create html directories
+    file: path=/usr/local/nginx/html/main state=directory
+  - name: copy main configuration to remote
+    template: src=/etc/ansible/config/nginx/nginx.conf dest=/usr/local/nginx/conf backup=yes
+  - name: copy server configuration to remote
+    template: src=/etc/ansible/config/nginx/main.conf dest=/usr/local/nginx/conf/conf.d/
+  - name: change authority for nginx
+    file: path=/usr/local/nginx owner=nginx group=nginx
+  - name: make new index
+    copy: content="{{ansible_hostname}}" dest=/usr/local/nginx/html/main/index.html
+  - name: run nginx
+    command: /usr/local/nginx/sbin/nginx

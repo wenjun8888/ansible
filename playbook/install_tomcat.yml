@@ -1,0 +1,17 @@
+- hosts: cluster
+  remote_user: root
+  tasks:
+  - name: mkdir Downloads
+    file: path=/root/Downloads state=directory
+  - name: copy jdk to remote
+    copy: src=/etc/ansible/files/jdk-7u60-linux-x64.tar.gz dest=/root/Downloads
+  - name: copy tomcat to remote
+    copy: src=/etc/ansible/files/apache-tomcat-8.0.33.tar.gz dest=/root/Downloads
+  - name: copy java env  
+    copy: src=/etc/ansible/config/tomcat/tomcat.env dest=/opt/ 
+  - name: run install scripts
+    script: /etc/ansible/scripts/tomcat.sh
+  - name: make new index
+    copy: content="{{ansible_hostname}}" dest=/usr/local/tomcat/webapps/ROOT/index.jsp
+  - name: run tomcat
+    shell: source /etc/profile && nohup /usr/local/tomcat/bin/startup.sh &
