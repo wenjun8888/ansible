@@ -1,4 +1,4 @@
-- hosts: cluster
+- hosts: gyljr-web
   remote_user: root
   tasks:
   - name: mkdir Downloads

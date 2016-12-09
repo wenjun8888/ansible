@@ -1,0 +1,21 @@
+- hosts: gyljr_mysql
+  remote_user: root
+  tasks:
+  - name: mkdir Downloads
+    file: path=/root/Downloads state=directory
+  - name: copy mysql to remote
+    copy: src=/etc/ansible/files/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz dest=/root/Downloads
+  - name: install relation package
+    yum: name=libstdc++.so.6,libaio.so.1,libncurses.so.5
+  - name: run install scripts
+    script: /etc/ansible/scripts/mysql.sh
+  - name: copy serivce file
+    copy: src=/etc/ansible/config/mysql/mysql.service dest=/usr/lib/systemd/system
+  - name: start mysql
+    service: name=mysql state=started enabled=yes
+  - name: run mysql_ddl scripts
+    script: /etc/ansible/scripts/mysql_ddl.sh
+  - name: copy mysql config
+    template: src=/etc/ansible/config/mysql/my.cnf dest=/etc/my.cnf backup=yes
+  - name: restart mysql
+    service: name=mysql state=restarted 
