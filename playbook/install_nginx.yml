@@ -1,4 +1,4 @@
-- hosts: cluster
+- hosts: xglc_web
   remote_user: root
   tasks:
   - name: mkdir 

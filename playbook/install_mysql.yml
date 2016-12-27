@@ -1,4 +1,4 @@
-- hosts: gyljr_mysql
+- hosts: mysql
   remote_user: root
   tasks:
   - name: mkdir Downloads
@@ -6,7 +6,7 @@
   - name: copy mysql to remote
     copy: src=/etc/ansible/files/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz dest=/root/Downloads
   - name: install relation package
-    yum: name=libstdc++.so.6,libaio.so.1,libncurses.so.5
+    yum: name=libaio.so.1,libncurses.so.5
   - name: run install scripts
     script: /etc/ansible/scripts/mysql.sh
   - name: copy serivce file
