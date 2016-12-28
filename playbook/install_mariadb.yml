@@ -1,0 +1,21 @@
+- hosts: mariadb
+  remote_user: root
+  tasks:
+  - name: Create Folder
+    file: path=/root/Downloads state=directory
+  - name: Copy Packages to Remote
+    copy: src=/etc/ansible/files/mariadb-10.0.23-linux-x86_64.tar.gz dest=/root/Downloads
+  - name: Run Scripts
+    script: /etc/ansible/scripts/mariadb.sh
+  - name: Systemd
+    copy: src=/etc/ansible/config/mariadb/mariadb.service dest=/usr/lib/systemd/system
+  - name: Start Service
+    service: name=mariadb state=started enabled=yes
+  - name: Change Password
+    script: /etc/ansible/scripts/mariadb_ddl.sh
+  - name: Copy Configuration
+    template: src=/etc/ansible/config/mariadb/my.cnf dest=/etc/my.cnf backup=yes
+  - name: Stop Service
+    service: name=mariadb state=stopped enabled=yes
+  - name: Stop Service
+    service: name=mariadb state=started enabled=yes

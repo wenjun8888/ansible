@@ -1,0 +1,14 @@
+[Unit]
+Description=MariaDB DBMS
+
+[Service]
+LimitNOFILE=10000
+Type=simple
+User=mysql
+Group=mysql
+PIDFile=/usl/local/mysql/mariadb.pid
+ExecStart=/usr/local/mysql/bin/mysqld_safe --datadir=/usr/local/mysql/data
+ExecStop=/bin/kill -9 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
